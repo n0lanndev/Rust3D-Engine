@@ -1,7 +1,7 @@
 use std::ops::{Add, Sub, Mul, Index, IndexMut, Neg, Div, AddAssign, MulAssign};
 use std::fmt::{Display, Result, Formatter};
 
-type point3 = Vec3;
+pub type Point3 = Vec3;
 
 #[derive(Copy, Clone)]
 pub struct Vec3
@@ -13,7 +13,7 @@ pub struct Vec3
 
 impl Vec3
 {
-    pub fn zero() -> Vec3{
+    pub fn new() -> Vec3{
         Vec3 {
             x: 0.0,
             y: 0.0, 
@@ -45,6 +45,7 @@ impl Mul<Vec3> for Vec3
 
 impl Neg for Vec3 {
     type Output = Vec3;
+
     fn neg(self) -> Vec3 {
         Vec3 {
             x : -self.x,
