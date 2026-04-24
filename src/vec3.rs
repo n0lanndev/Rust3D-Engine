@@ -3,7 +3,7 @@ use std::fmt::{Display, Result, Formatter};
 
 pub type Point3 = Vec3;
 
-#[derive(Copy, Clone)]
+#[derive(Default, Copy, Clone)]
 pub struct Vec3
 {
     pub x: f64, 
@@ -13,11 +13,11 @@ pub struct Vec3
 
 impl Vec3
 {
-    pub fn new() -> Vec3{
+    pub fn new(x: f64, y: f64, z: f64) -> Vec3{
         Vec3 {
-            x: 0.0,
-            y: 0.0, 
-            z: 0.0,           
+            x: x,
+            y: y, 
+            z: z,           
         }
     }
 
