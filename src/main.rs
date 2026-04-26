@@ -3,16 +3,32 @@ mod vec3;
 use vec3::Vec3;
 use vec3::Point3;
 use vec3::unit_vector;
+use vec3::dot;
 
 mod color;
 use color::write_color;
 use color::Color;
 
-
 mod ray;
 use ray::Ray;
 
+fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> bool
+{
+    let oc: Vec3 = center - *ray.origin();
+    let a: f64 = dot(*ray.direction(),*ray.direction());
+    let b: f64 = -2.0 * dot(*ray.direction(), oc);
+    let c: f64 = dot(oc, oc) - radius*radius;
+    let discriminant: f64 = b*b - 4.0 * a * c;
+
+    discriminant >= 0.0
+
+}
+
 fn ray_color(r : Ray) -> Color{
+    if hit_sphere(Point3::new(0.0,0.0,-1.0), 0.5, &r)
+    {
+        return Color::new(1.0, 0.0, 0.0);
+    }
     let unit_vector : Vec3 = unit_vector(*r.direction());
     let a : f64 = 0.5 * (unit_vector.y + 1.0);
     (1.0 - a) * Color::new(1.0, 1.0, 1.0) + a * Color::new(0.5, 0.7, 1.0)
@@ -22,7 +38,7 @@ fn main() -> io::Result<()> {
 
     // Image
     
-    let aspect_ratio: f64 = 16.0 /9.0;
+    let aspect_ratio: f64 = 16.0 / 9.0;
     let image_width: i64 = 400;
 
     // Calculer l'image heigth, et s'assurer que c'est au moins 1
@@ -34,11 +50,11 @@ fn main() -> io::Result<()> {
     
     let focus_lenght : f64 = 1.0;
     let viewport_height : f64 = 2.0;
-    let viewport_width : f64 = viewport_height * (image_heigth as f64 / image_width as f64);
+    let viewport_width : f64 = viewport_height * (image_width as f64 / image_heigth as f64);
     let camera_center : Point3 = Point3::default();
 
     // Vecteur viewport
-    
+
     let viewport_u : Vec3 = Vec3::new(viewport_width, 0.0 , 0.0);
     let viewport_v : Vec3 = Vec3::new(0.0, -viewport_height, 0.0);
 
