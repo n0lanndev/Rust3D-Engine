@@ -21,10 +21,13 @@ use hittable_list::HittableList;
 mod sphere;
 use sphere::Sphere;
 
+mod interval;
+use interval::Interval;
+
 fn ray_color<T: Hittable>(r : Ray, world : &T) -> Color{
 
     let mut rec : HitRecord = HitRecord::default();
-    if world.hit(&r, 0.0, f64::MAX, &mut rec){
+    if world.hit(&r, Interval::new(0.0, f64::INFINITY), &mut rec){
         return 0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0));
     }
 
