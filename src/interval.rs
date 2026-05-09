@@ -1,4 +1,3 @@
-
 pub struct Interval
 {
     pub min: f64,
