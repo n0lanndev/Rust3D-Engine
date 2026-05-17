@@ -20,7 +20,7 @@ impl Interval
         Interval::EMPTY
     }
 
-    pub fn new(min: f64, max: f64) -> Interval{
+    pub const fn new(min: f64, max: f64) -> Interval{
         Interval{
             min : min,
             max : max,
@@ -37,5 +37,17 @@ impl Interval
 
     pub fn surrounds(&self, x: f64) -> bool{
         return self.min < x && x < self.max;
+    }
+
+    pub fn clamp(&self, x: f64) -> f64{
+        if x < self.min
+        {
+            return self.min;
+        }
+        if x > self.max
+        {
+            return self.max;
+        }
+        return x;
     }
 }

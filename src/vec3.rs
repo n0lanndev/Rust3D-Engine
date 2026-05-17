@@ -13,6 +13,7 @@ pub struct Vec3
 
 impl Vec3
 {
+    #[inline]
     pub fn new(x: f64, y: f64, z: f64) -> Vec3{
         Vec3 {
             x: x,
@@ -21,10 +22,12 @@ impl Vec3
         }
     }
 
+    #[inline]
     pub fn length(&self) -> f64{
         self.length_squared().sqrt()
     }
 
+    #[inline]
     pub fn length_squared(&self) -> f64{
         self.x * self.x + self.y * self.y + self.z * self.z
     }
@@ -34,6 +37,7 @@ impl Mul<Vec3> for Vec3
 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, other: Vec3) -> Vec3{
         Vec3 {
             x : self.x * other.x,
@@ -46,6 +50,7 @@ impl Mul<Vec3> for Vec3
 impl Neg for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn neg(self) -> Vec3 {
         Vec3 {
             x : -self.x,
@@ -58,12 +63,15 @@ impl Neg for Vec3 {
 impl Div<f64> for Vec3
 {
     type Output = Vec3;
+
+    #[inline]
     fn div(self, t : f64) -> Vec3{
         self * (1.0 / t)
     }
 }
 
 impl AddAssign for Vec3 {
+    #[inline]
     fn add_assign(&mut self, other: Vec3) {
         self.x += other.x;
         self.y += other.y;
@@ -72,6 +80,7 @@ impl AddAssign for Vec3 {
 }
 
 impl MulAssign<f64> for Vec3 {
+    #[inline]
     fn mul_assign(&mut self, t: f64) {
         self.x *= t;
         self.y *= t;
@@ -82,6 +91,7 @@ impl MulAssign<f64> for Vec3 {
 impl Mul<Vec3> for f64 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, v: Vec3) -> Vec3 {
         v * self
     }
@@ -91,6 +101,7 @@ impl Mul<f64> for Vec3
 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, other: f64) -> Vec3{
         Vec3 {
             x : self.x * other,
@@ -104,6 +115,7 @@ impl Add for Vec3
 {
     type Output = Vec3;
 
+    #[inline]
     fn add(self, other: Vec3) -> Vec3{
         Vec3 {
             x: self.x + other.x,
@@ -118,6 +130,7 @@ impl Sub for Vec3
 {
     type Output = Vec3;
 
+    #[inline]
     fn sub(self, other: Vec3) -> Vec3{
         Vec3 {
             x: self.x - other.x,
@@ -132,6 +145,7 @@ impl Index<usize> for Vec3
 {
     type Output = f64;
 
+    #[inline]
     fn index(&self, index: usize) -> &f64{
         match index {
             0 => &self.x,
@@ -143,6 +157,7 @@ impl Index<usize> for Vec3
 }
 
 impl IndexMut<usize> for Vec3 {
+    #[inline]
     fn index_mut(&mut self, i: usize) -> &mut f64 {
         match i {
             0 => &mut self.x,
@@ -155,6 +170,7 @@ impl IndexMut<usize> for Vec3 {
 
 impl Display for Vec3 
 {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result{
         write!(f, "(x = {}, y = {}, z = {})", self.x, self.y, self.z)
     }
@@ -162,14 +178,17 @@ impl Display for Vec3
 
 // fonction utilitaires
 
+#[inline]
 pub fn dot(u: Vec3, v: Vec3) -> f64{
     u.x * v.x + u.y * v.y + u.z * v.z 
 }
 
+#[inline]
 pub fn unit_vector(u: Vec3) -> Vec3{
     u / u.length()
 }
 
+#[inline]
 pub fn cross(u: Vec3, v:Vec3) -> Vec3{
     Vec3{
         x: u.y * v.z - u.z * v.y,
