@@ -14,6 +14,7 @@ fn main() -> io::Result<()> {
     // Camera
     let mut cam : Camera = Camera::new(16.0 / 9.0, 400);
     cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
     let _ = cam.render(&world);
 
     Ok(())

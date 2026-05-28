@@ -1,6 +1,6 @@
 use std::io::{self, Write};
 
-use crate::vec3::{Vec3, Point3, unit_vector};
+use crate::vec3::{Vec3, Point3, unit_vector, random_on_hemisphere};
 use crate::color::{Color, write_color};
 use crate::ray::{Ray};
 use crate::hittable::{HitRecord, Hittable};
@@ -12,6 +12,7 @@ pub struct Camera
     pub aspect_ratio : f64,
     pub image_width : i64,
     pub samples_per_pixel : i64,
+    pub max_depth : i64,
     pixel_samples_scale : f64,
     image_heigth : i64,
     center : Point3,
@@ -27,6 +28,7 @@ impl Camera
             aspect_ratio,
             image_width,
             samples_per_pixel : 10,
+            max_depth : 10,
             pixel_samples_scale : 0.0,
             image_heigth : 0,
             center : Point3::default(),
@@ -75,7 +77,7 @@ impl Camera
                 let mut pixel_color : Color = Color::default();
                 for sample in 0..self.samples_per_pixel{
                     let r : Ray = self.get_ray(i, j);
-                    pixel_color += Self::ray_color(r, world);
+                    pixel_color += Self::ray_color(r, self.max_depth, world);
                 }
 
                 write_color(&mut out, &(self.pixel_samples_scale * pixel_color)); 
@@ -100,11 +102,16 @@ impl Camera
         Vec3::new(random_double() - 0.5, random_double() - 0.5, 0.0)
     }
 
-    fn ray_color<T: Hittable>(r : Ray, world : &T) -> Color{
+    fn ray_color<T: Hittable>(r : Ray, depth: i64, world : &T) -> Color{
 
+        if depth <= 0
+        {
+            return Color::new(0.0, 0.0, 0.0);
+        }
         let mut rec : HitRecord = HitRecord::default();
-        if world.hit(&r, Interval::new(0.0, f64::INFINITY), &mut rec){
-            return 0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0));
+        if world.hit(&r, Interval::new(0.001, f64::INFINITY), &mut rec){
+            let direction : Vec3 = random_on_hemisphere(&rec.normal);
+            return 0.5 * Self::ray_color(Ray::new(rec.p, direction), depth-1, world);
         } 
 
         let unit_vector : Vec3 = unit_vector(*r.direction());
